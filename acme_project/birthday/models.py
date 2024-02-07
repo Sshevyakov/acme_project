@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.urls import reverse
 
 from .validators import real_age
 
@@ -42,9 +43,19 @@ class Birthday(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Сотрудник'
+        verbose_name_plural = 'Сотрудники'
         constraints = (
             models.UniqueConstraint(
                 fields=('first_name', 'last_name', 'birthday'),
                 name='Unique person constraint',
             ),
         )
+
+    
+    def get_absolute_url(self):
+        return reverse('birthday:detail', kwargs={'pk': self.pk})
+    
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
