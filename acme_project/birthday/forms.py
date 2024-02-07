@@ -1,7 +1,13 @@
 from django import forms
+from django.core.exceptions import ValidationError
 # импортируем класс модели Birthday для создания формы по образу модели
 from .models import Birthday
+from .validators import real_age
 '''Создадим новый класс на основе модели из БД. Старый класс закомментируем'''
+
+# Множество с именами участников Ливерпульской четвёрки.
+BEATLES = {'Джон Леннон', 'Пол Маккартни', 'Джордж Харрисон', 'Ринго Старр'}
+
 
 class BirthdayForm(forms.ModelForm):
     # Все настройки задаём в подклассе Meta.
@@ -18,6 +24,24 @@ class BirthdayForm(forms.ModelForm):
         }
 
 
+    def clean_first_name(self):
+        first_name = self.cleaned_data['first_name']
+        return first_name.split()[0]
+        
+
+    def clean(self):
+            # наследуем метод из родительского класса (constraints из файла models.py)
+            super().clean()
+            # Получаем имя и фамилию из очищенных полей формы.
+            first_name = self.cleaned_data['first_name']
+            last_name = self.cleaned_data['last_name']
+            # Проверяем вхождение сочетания имени и фамилии во множество имён.
+            if f'{first_name} {last_name}' in BEATLES:
+                raise ValidationError(
+                    'Мы тоже любим Битлз, но введите, пожалуйста, настоящее имя!'
+                )
+
+
 ''' старый класс, оставляю для образца
 class BirthdayForm(forms.Form):
     first_name = forms.CharField(
@@ -31,7 +55,8 @@ class BirthdayForm(forms.Form):
     )
     birthday = forms.DateField(
         label='Дата рождения',
-        widget=forms.DateInput(attrs={'type': 'date'})
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        validators=(real_age,),
     )
     """Добавил поля формы для тестов задания из тренажёра
     description = forms.CharField(

@@ -1,16 +1,22 @@
 {% extends "base.html" %}
-
+{% load django_bootstrap5 %}
 {% block content %}
+  <style>
+    .right {
+      float: right;
+    }
+  </style>
   <h1>Проект ACME</h1>
   <p>Acme Corporation: <b>A</b> <b>C</b>ompany <b>M</b>ade <b>E</b>verything</p>
   {% if staff %}
+    <h1>Поздравляем с днём рождения!!!</h1>
     {% for employee in staff %}
-      <ul>
-        <li>{{ employee.first_name }}
-        <li>{{ employee.last_name }}
-        <li>{{ employee.birthday }}
-        <hr>
-      </ul>
+      <div class="card col-4 m-3">
+        <div class="card-body">
+          {{ employee.first_name }} {{ employee.last_name }} <a class="right" href="mailto:{{ employee.email }}">{% bootstrap_button button_type="submit" content="Поздравить" %}</a>
+        </div>
+      </div>
     {% endfor %}
   {% endif %}
+  <a href="{% url 'birthday:list' %}">Показать всех сотрудников</a>
 {% endblock %}
