@@ -19,6 +19,7 @@
           {{ birthday.first_name }} {% if birthday.last_name %} {{ birthday.last_name }} {% else %}Нет фамилии {% endif %} - {{ birthday.birthday }}
         </div>
         <div>
+          <a href="{% url 'birthday:detail' birthday.id %}">Подробнее</a> | 
           <a href="{% url 'birthday:edit' birthday.id %}">Редактировать</a> | 
           <a href="{% url 'birthday:delete' birthday.id %}">Удалить</a>
         </div>
