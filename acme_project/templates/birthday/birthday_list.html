@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <h1 align="center">Список сотрудников</h1>
   {% for birthday in page_obj %}
     <!-- Добавим класс row: каждая запись — это строка -->
     <div class="row">
@@ -30,5 +31,5 @@
 
   <!-- Подключаем пагинатор -->
   {% include "includes/paginator.html" %}
-  
+
 {% endblock %}
